@@ -1,11 +1,18 @@
 <template>
+  
   <div class="container mt-5">
+    
+    <!-- Boutons de changement de langue -->
+    <div class="mb-4 d-flex justify-content-end">
+      <button @click="changeLanguage('en')" class="btn btn-primary me-2">English</button>
+      <button @click="changeLanguage('fr')" class="btn btn-primary">Français</button>
+    </div>
     <form
       @submit.prevent="handleUpdateRecette"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
     >
       <div class="mb-3">
-        <label for="titre" class="form-label">Titre :</label>
+        <label for="titre" class="form-label">{{ $t('title') }} :</label>
         <input
           type="text"
           class="form-control"
@@ -15,7 +22,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="ingredient" class="form-label">Ingrédients :</label>
+        <label for="ingredient" class="form-label">{{ $t('ingredients') }} :</label>
         <textarea
           class="form-control"
           v-model="ingredient"
@@ -24,19 +31,19 @@
         ></textarea>
       </div>
       <div class="mb-3">
-        <label for="type" class="form-label">Type :</label>
+        <label for="type" class="form-label">{{ $t('type') }} :</label>
         <select class="input form-select" v-model="type" id="type" required>
-          <option>Entrée</option>
-          <option>Plat</option>
-          <option>Dessert</option>
+          <option value="Entrée">{{ $t('entry') }}</option>
+          <option value="Plat">{{ $t('main_course') }}</option>
+          <option value="Dessert">{{ $t('dessert') }}</option>
         </select>
       </div>
-      <button class="clr btn mt-3 mb-4 me-3 text-white">Enregistrer</button>
+      <button class="clr btn mt-3 mb-4 me-3 text-white">{{ $t('save') }}</button>
       <RouterLink
         class="list text-decoration-none text-white me-5 fw-bold"
         to="/listrecette"
       >
-        <button class="btn btn-danger mt-3 mb-4">Annuler</button>
+        <button class="btn btn-danger mt-3 mb-4">{{ $t('cancel') }}</button>
       </RouterLink>
     </form>
   </div>
@@ -47,6 +54,13 @@ import { useGestionStore } from "@/stores/gestion";
 import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
 
+import { getCurrentInstance } from 'vue';
+
+const { proxy } = getCurrentInstance();
+
+const changeLanguage = (locale) => {
+  proxy.$i18n.locale = locale;
+};
 const store = useGestionStore();
 const router = useRouter();
 const route = useRoute();

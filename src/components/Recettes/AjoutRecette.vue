@@ -1,13 +1,20 @@
 <template>
+  
   <div class="container">
+    <!-- Boutons de changement de localeue -->
+    <div class="mb-4 d-flex justify-content-end">
+      <button @click="changelocaleuage('en')" class="btn btn-primary me-2">English</button>
+      <button @click="changelocaleuage('fr')" class="btn btn-primary">Français</button>
+    </div>
+
     <form
       @submit.prevent="addRecette"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
     >
-    <h1>{{ `size is ${size}` }}</h1>
+      <h1>{{ $t('size_is', { size }) }}</h1>
 
       <div class="mb-3">
-        <label for="title" class="form-label">Tilte :</label>
+        <label for="title" class="form-label">{{ $t('title') }} :</label>
         <input
           type="text"
           class="form-control"
@@ -17,7 +24,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="ingredient" class="form-label">Ingrédients :</label>
+        <label for="ingredient" class="form-label">{{ $t('ingredients') }} :</label>
         <textarea
           class="form-control"
           v-model="ingredient"
@@ -27,19 +34,19 @@
       </div>
 
       <div class="mb-3">
-        <label for="type" class="form-label">Type :</label>
+        <label for="type" class="form-label">{{ $t('type') }} :</label>
         <select class="input form-select" v-model="type" id="type" required>
-          <option value="Entrée">Entrée</option>
-          <option value="Plat">Plat</option>
-          <option value="Dessert">Dessert</option>
+          <option value="Entrée">{{ $t('entry') }}</option>
+          <option value="Plat">{{ $t('main_course') }}</option>
+          <option value="Dessert">{{ $t('dessert') }}</option>
         </select>
       </div>
-      <button class="clr btn text-white mt-3 mb-4 me-3">Ajouter</button>
+      <button class="clr btn text-white mt-3 mb-4 me-3">{{ $t('add') }}</button>
       <RouterLink
         class="list text-decoration-none text-white me-5 fw-bold"
         to="/listrecette"
       >
-        <button class="btn btn-danger mt-3 mb-4">Annuler</button>
+        <button class="btn btn-danger mt-3 mb-4">{{ $t('cancel') }}</button>
       </RouterLink>
     </form>
   </div>
@@ -48,45 +55,40 @@
 <script setup>
 import { useGestionStore } from "@/stores/gestion";
 import { useRouter } from "vue-router";
-// import axios from "axios";
+import { ref, getCurrentInstance } from "vue";
 
 const router = useRouter();
-import { ref } from "vue";
 const store = useGestionStore();
 const title = ref("");
 const ingredient = ref("");
 const type = ref("");
-// const size = ref(0);
-// const axiosAddRecette = async() => {
-//   try {
-//     const resp = await axios.get("http://localhost:3005/api/recipes");
-//     console.log(resp.data);
-    
-//     size.value = resp.data.length; 
-//   } catch (error) {
-    
-//   }  
- 
-// };
+const size = ref(0);
 
 const addRecette = async () => {
   try {
     await store.addRecete({
-    title: title.value,
-    ingredient: ingredient.value,
-    type: type.value,
-  });
+      title: title.value,
+      ingredient: ingredient.value,
+      type: type.value,
+    });
 
-  title.value = "";
-  ingredient.value = "";
-  type.value = "";
-  router.push("/listrecette");
+    title.value = "";
+    ingredient.value = "";
+    type.value = "";
+    router.push("/listrecette");
   } catch (error) {
-    console.log(error)    
+    console.log(error);
   }
-  
 };
-</script> 
+
+
+const { proxy } = getCurrentInstance();
+
+
+const changelocaleuage = (locale) => {
+  proxy.$i18n.locale = locale;
+};
+</script>
 
 <style scoped>
 .clr {

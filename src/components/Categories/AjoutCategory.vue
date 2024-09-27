@@ -1,13 +1,15 @@
 <template>
   <div class="container">
+    <div class="mb-4 d-flex justify-content-end">
+      <button @click="changeLanguage('en')" class="btn btn-primary me-2">{{ $t('buttons.english') }}</button>
+      <button @click="changeLanguage('fr')" class="btn btn-primary">{{ $t('buttons.french') }}</button>
+    </div>
     <form
       @submit.prevent="addCategory"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
     >
-    <!-- <h1>{{ `size is ${size}` }}</h1> -->
-
       <div class="mb-3">
-        <label for="name" class="form-label">Name :</label>
+        <label for="name" class="form-label">{{ $t('form.name') }} :</label>
         <input
           type="text"
           class="form-control"
@@ -16,79 +18,44 @@
           required
         />
       </div>
-      <!-- <div class="mb-3">
-        <label for="ingredient" class="form-label">Ingrédients :</label>
-        <textarea
-          class="form-control"
-          v-model="ingredient"
-          id="ingredient"
-          required
-        ></textarea>
-      </div>
-
-      <div class="mb-3">
-        <label for="type" class="form-label">Type :</label>
-        <select class="input form-select" v-model="type" id="type" required>
-          <option value="Entrée">Entrée</option>
-          <option value="Plat">Plat</option>
-          <option value="Dessert">Dessert</option>
-        </select>
-      </div> -->
-      <button class="clr btn text-white mt-3 mb-4 me-3">Ajouter</button>
-      <RouterLink
-        class="list text-decoration-none text-white me-5 fw-bold"
-        to="/list-category"
-      >
-        <button class="btn btn-danger mt-3 mb-4">Annuler</button>
-      </RouterLink>
+      <button type="submit" class="clr btn text-white mt-3 mb-4 me-3">
+        {{ $t('buttons.add') }}
+      </button>
+      <button class="btn btn-danger mt-3 mb-4" @click="cancelAction">
+        {{ $t('buttons.cancel') }}
+      </button>
     </form>
   </div>
 </template>
 
+
 <script setup>
 import { useGestionStore } from "@/stores/gestion";
 import { useRouter } from "vue-router";
-// import axios from "axios";
-
-const router = useRouter();
 import { ref } from "vue";
+import { getCurrentInstance } from 'vue';
+const router = useRouter();
 const store = useGestionStore();
 const name = ref("");
-// const size = ref(0);
-// const axiosAddRecette = async() => {
-//   try {
-//     const resp = await axios.get("http://localhost:3005/api/recipes");
-//     console.log(resp.data);
-    
-//     size.value = resp.data.length; 
-//   } catch (error) {
-    
-//   }  
- 
-// };
 
-// const addCategory = async () => {
-//   try {
-//     await store.addCategory(name.value);
-
-//   name.value = "";
-//   router.push("/list-category");
-//   } catch (error) {
-//     console.log(error)    
-//   }
-  
-// };
 const addCategory = async () => {
   try {
     await store.addCategory(name.value);
     name.value = "";
     router.push("/list-category");
   } catch (error) {
-    console.log(error.response.data);  // Voir les détails de l'erreur
+    console.error(error.response?.data || error.message); // Affiche les détails de l'erreur
   }
 };
 
+const cancelAction = () => {
+  router.push("/list-category");
+};
+const { proxy } = getCurrentInstance();
 
+const changeLanguage = (locale) => {
+  proxy.$i18n.locale = locale;
+};
 </script> 
 
 <style scoped>

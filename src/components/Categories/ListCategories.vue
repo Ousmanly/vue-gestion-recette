@@ -1,5 +1,9 @@
 <template>
   <div class="page-background container bg-color mt-5">
+    <div class="mb-4 d-flex justify-content-end">
+      <button @click="changeLanguage('en')" class="btn btn-primary me-2">{{ $t('buttons.english') }}</button>
+      <button @click="changeLanguage('fr')" class="btn btn-primary">{{ $t('buttons.french') }}</button>
+    </div>
     <RouterLink
       class="list text-decoration-none text-white me-5 fw-bold"
       to="/ajout-category"
@@ -9,16 +13,16 @@
         v-if="affichebtn"
         @click="maskBtn"
       >
-        Ajouter une categorie
+        {{ $t('buttons.addCategory') }}
       </button>
     </RouterLink>
     <div class="table-responsive">
       <table class="table table-striped table-bordered border-black">
         <thead class="table-success">
           <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th class="text-center">Actions</th>
+            <th>{{ $t('table.id') }}</th>
+            <th>{{ $t('table.name') }}</th>
+            <th class="text-center">{{ $t('table.actions') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -27,24 +31,15 @@
             <td>{{ category.name }}</td>
             <td class="text-center">
               <button class="btn btn-sm" @click="openModal(category)">
-                <i
-                  class="fa-solid fa-eye"
-                  style="color: #4596d3; font-size: 25px"
-                ></i>
+                <i class="fa-solid fa-eye" style="color: #4596d3; font-size: 25px"></i>
               </button>
               <RouterLink :to="{ path: `/modifie-category/${category.id}` }">
                 <button class="btn btn-sm">
-                  <i
-                    class="fa-solid fa-pen-to-square"
-                    style="color: #1ac163; font-size: 25px"
-                  ></i>
+                  <i class="fa-solid fa-pen-to-square" style="color: #1ac163; font-size: 25px"></i>
                 </button>
               </RouterLink>
               <button class="btn btn-sm" @click="destroyCategory(category.id)">
-                <i
-                  class="fa-solid fa-trash"
-                  style="color: #e30d0d; font-size: 25px"
-                ></i>
+                <i class="fa-solid fa-trash" style="color: #e30d0d; font-size: 25px"></i>
               </button>
             </td>
           </tr>
@@ -52,31 +47,40 @@
       </table>
     </div>
   </div>
+
   <div v-if="isModalVisible" class="modal-overlay" @click="closeModal">
     <div class="modal-content" @click.stop>
       <div class="modal-body">
-        <h3>Détails du Recette</h3>
-            <p><strong>Name :</strong> {{ selectedRecette.name }}</p>
+        <h3>{{ $t('modal.categoryDetails') }}</h3>
+        <p><strong>{{ $t('modal.name') }} :</strong> {{ selectedCategory.name }}</p>
       </div>
-      <button class="btn btn-danger" @click="closeModal">Fermer</button>
+      <button class="btn btn-danger" @click="closeModal">{{ $t('buttons.close') }}</button>
     </div>
   </div>
 </template>
 
+
 <script setup>
 import { onMounted, ref } from "vue";
 import { useGestionStore } from "@/stores/gestion";
-const store = useGestionStore();
+import { getCurrentInstance } from 'vue';
 
-let affichebtn = true;
-const maskBtn = () => {
-  affichebtn = false;
+const { proxy } = getCurrentInstance();
+
+const changeLanguage = (locale) => {
+  proxy.$i18n.locale = locale;
 };
+const store = useGestionStore();
+const affichebtn = ref(true);
 const isModalVisible = ref(false);
-const selectedRecette = ref(null);
+const selectedCategory = ref(null);
+
+const maskBtn = () => {
+  affichebtn.value = false;
+};
 
 const openModal = (category) => {
-  selectedRecette.value = category;
+  selectedCategory.value = category;
   isModalVisible.value = true;
 };
 
@@ -87,12 +91,12 @@ const closeModal = () => {
 onMounted(() => {
   store.loadDataFromCategorieApi();
 });
+
 const destroyCategory = (id) => {
   store.deleteCategory(id);
 };
-
 </script>
-   
+
 <style scoped>
 .modal-overlay {
   position: fixed;
@@ -118,12 +122,14 @@ const destroyCategory = (id) => {
 .modal-body {
   padding: 20px;
 }
+
 .clr {
   background-color: #343a40; 
 }
 .clr:hover {
   background-color: #24272a; 
 }
+
 .page-background {
   background-color: #f0f0f0;
   min-height: 90vh;
