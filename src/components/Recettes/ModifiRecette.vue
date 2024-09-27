@@ -17,28 +17,48 @@
           type="text"
           class="form-control"
           v-model="title"
-          id="titre"
+          id="title"
           required
         />
       </div>
       <div class="mb-3">
-        <label for="ingredient" class="form-label">{{ $t('ingredients') }} :</label>
+        <label for="ingredients" class="form-label">{{ $t('ingredients') }} :</label>
         <textarea
           class="form-control"
-          v-model="ingredient"
-          id="ingredient"
+          v-model="ingredients"
+          id="ingredients"
           required
         ></textarea>
       </div>
+
       <div class="mb-3">
         <label for="type" class="form-label">{{ $t('type') }} :</label>
         <select class="input form-select" v-model="type" id="type" required>
-          <option value="Entrée">{{ $t('entry') }}</option>
-          <option value="Plat">{{ $t('main_course') }}</option>
-          <option value="Dessert">{{ $t('dessert') }}</option>
+          <option value="entry">{{ $t('entry') }}</option>
+          <option value="plat">{{ $t('main_course') }}</option>
+          <option value="desert">{{ $t('dessert') }}</option>
         </select>
       </div>
-      <button class="clr btn mt-3 mb-4 me-3 text-white">{{ $t('save') }}</button>
+      <div class="mb-3">
+        <label for="category" class="form-label">Catégorie :</label>
+        <select
+          class="form-select"
+          v-model="selectedCategory"
+          id="category"
+          required
+        >
+          <option value="" disabled selected>-- Sélectionnez une catégorie --</option>
+          <option
+            v-for="category in store.categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+            <button class="clr btn mt-3 mb-4 me-3 text-white">{{ $t('save') }}</button>
+
       <RouterLink
         class="list text-decoration-none text-white me-5 fw-bold"
         to="/listrecette"
@@ -66,28 +86,48 @@ const router = useRouter();
 const route = useRoute();
 
 const title = ref("");
-const ingredient = ref("");
+const ingredients = ref("");
 const type = ref("");
+const selectedCategory = ref("");
 
 const id = Number(route.params.id);
 
+// onMounted(() => {
+//   const recette = store.recettes.find((recette) => recette.id === id);
+//   if (recette) {
+//     title.value = recette.title;
+//     ingredients.value = recette.ingredients;
+//     type.value = recette.type;
+//     selectedCategory.value = recette.category_id;
+//   }
+// });
 onMounted(() => {
+  // Charger les catégories si elles ne sont pas déjà présentes
+  // if (store.categories.length === 0) {
+  //   store.loadDataFromCategorieApi();
+  // }
+
   const recette = store.recettes.find((recette) => recette.id === id);
   if (recette) {
     title.value = recette.title;
-    ingredient.value = recette.ingredient;
+    ingredients.value = recette.ingredients;
     type.value = recette.type;
+    selectedCategory.value = recette.category_id;
   }
 });
+
 
 const handleUpdateRecette = () => {
   const updatedRecette = {
     id,
     title: title.value,
-    ingredient: ingredient.value,
+    ingredients: ingredients.value,
     type: type.value,
+    category_id: selectedCategory.value,
   };
-
+  console.log(updatedRecette); 
+  console.log('ID à mettre à jour:', id);
+  console.log('ID de la catégorie sélectionnée:', selectedCategory.value);
   store.updateRecette(updatedRecette);
   router.push("/listrecette");
 };

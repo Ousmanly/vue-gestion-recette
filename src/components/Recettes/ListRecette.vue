@@ -6,7 +6,7 @@
     </div>
     <RouterLink
       class="list text-decoration-none text-white me-5 fw-bold"
-      to="/ajoutrecette"
+      to="/ajout-recette"
     >
       <button
         class="clr btn text-white mt-5 mb-4 fw-bold"
@@ -25,6 +25,7 @@
             <th>{{ $t('ingredients') }}</th>
             <th>{{ $t('recipe_type') }}</th>
             <th class="text-center">{{ $t('actions') }}</th>
+
           </tr>
         </thead>
         <tbody>
@@ -33,6 +34,9 @@
             <td>{{ recette.title }}</td>
             <td>{{ recette.ingredients }}</td>
             <td>{{ recette.type }}</td>
+            <!-- <td>{{ recette.category?.name }}</td> -->
+            <!-- <td>{{ recette.category_id ? recette.category.name : 'Aucune catégorie' }}</td> -->
+            <td>{{ recette.category || 'Aucune catégorie' }}</td>
             <td class="text-center">
               <button class="btn btn-sm" @click="openModal(recette)">
                 <i
@@ -69,6 +73,7 @@
           <strong>{{ $t('ingredients') }} :</strong> {{ selectedRecette.ingredients }}
         </p>
         <p><strong>{{ $t('recipe_type') }} :</strong> {{ selectedRecette.type }}</p>
+    <p><strong>Category :</strong> {{ selectedRecette.category }}</p>
       </div>
       <button class="btn btn-danger" @click="closeModal">{{ $t('close') }}</button>
     </div>
@@ -103,6 +108,7 @@ const closeModal = () => {
 };
 
 onMounted(() => {
+  store.loadDataFromCategorieApi();
   store.loadDataFromApi();
 });
 const destroyRecette = (id) => {

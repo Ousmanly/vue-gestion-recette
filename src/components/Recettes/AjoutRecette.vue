@@ -8,11 +8,9 @@
     </div>
 
     <form
-      @submit.prevent="addRecette"
+      @submit.prevent="handleAddRecipe"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
     >
-      <h1>{{ $t('size_is', { size }) }}</h1>
-
       <div class="mb-3">
         <label for="title" class="form-label">{{ $t('title') }} :</label>
         <input
@@ -24,11 +22,11 @@
         />
       </div>
       <div class="mb-3">
-        <label for="ingredient" class="form-label">{{ $t('ingredients') }} :</label>
+        <label for="ingredients" class="form-label">{{ $t('ingredients') }} :</label>
         <textarea
           class="form-control"
-          v-model="ingredient"
-          id="ingredient"
+          v-model="ingredients"
+          id="ingredients"
           required
         ></textarea>
       </div>
@@ -36,9 +34,27 @@
       <div class="mb-3">
         <label for="type" class="form-label">{{ $t('type') }} :</label>
         <select class="input form-select" v-model="type" id="type" required>
-          <option value="Entrée">{{ $t('entry') }}</option>
-          <option value="Plat">{{ $t('main_course') }}</option>
-          <option value="Dessert">{{ $t('dessert') }}</option>
+          <option value="entry">{{ $t('entry') }}</option>
+          <option value="plat">{{ $t('main_course') }}</option>
+          <option value="desert">{{ $t('dessert') }}</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="category" class="form-label">Catégorie :</label>
+        <select
+          class="form-select"
+          v-model="selectedCategory"
+          id="category"
+          required
+        >
+          <option value="" disabled selected>-- Sélectionnez une catégorie --</option>
+          <option
+            v-for="category in store.categories"
+            :key="category.id"
+            :value="category.id"
+          >
+            {{ category.name }}
+          </option>
         </select>
       </div>
       <button class="clr btn text-white mt-3 mb-4 me-3">{{ $t('add') }}</button>
@@ -55,29 +71,37 @@
 <script setup>
 import { useGestionStore } from "@/stores/gestion";
 import { useRouter } from "vue-router";
+
 import { ref, getCurrentInstance } from "vue";
 
 const router = useRouter();
+
+
+import { ref, onMounted } from "vue";
 const store = useGestionStore();
 const title = ref("");
-const ingredient = ref("");
+const ingredients = ref("");
 const type = ref("");
-const size = ref(0);
+const selectedCategory = ref("");
 
-const addRecette = async () => {
+
+onMounted(() => {
+  store.loadDataFromCategorieApi();
+});
+
+const handleAddRecipe = async () => {
   try {
     await store.addRecete({
-      title: title.value,
-      ingredient: ingredient.value,
-      type: type.value,
-    });
-
-    title.value = "";
-    ingredient.value = "";
-    type.value = "";
-    router.push("/listrecette");
+  const newRecipe = {
+    title: title.value,
+    ingredients: ingredients.value,
+    type: type.value,
+    category_id: selectedCategory.value, 
+  };
+  await store.addRecete(newRecipe);
+  router.push("/listrecette"); 
   } catch (error) {
-    console.log(error);
+    
   }
 };
 
@@ -89,6 +113,7 @@ const changelocaleuage = (locale) => {
   proxy.$i18n.locale = locale;
 };
 </script>
+
 
 <style scoped>
 .clr {

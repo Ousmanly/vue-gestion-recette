@@ -44,7 +44,7 @@ const addCategory = async () => {
     name.value = "";
     router.push("/list-category");
   } catch (error) {
-    console.error(error.response?.data || error.message); // Affiche les détails de l'erreur
+    console.log(error.response.data);
   }
 };
 
