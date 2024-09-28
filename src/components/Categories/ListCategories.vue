@@ -1,9 +1,6 @@
 <template>
   <div class="page-background container bg-color mt-5">
-    <div class="mb-4 d-flex justify-content-end">
-      <button @click="changeLanguage('en')" class="btn btn-primary me-2">{{ $t('buttons.english') }}</button>
-      <button @click="changeLanguage('fr')" class="btn btn-primary">{{ $t('buttons.french') }}</button>
-    </div>
+    
     <RouterLink
       class="list text-decoration-none text-white me-5 fw-bold"
       to="/ajout-category"
@@ -71,12 +68,7 @@
 import { onMounted, ref } from "vue";
 import { useGestionStore } from "@/stores/gestion";
 const store = useGestionStore();
-import { getCurrentInstance } from 'vue';
-const { proxy } = getCurrentInstance();
 
-const changeLanguage = (locale) => {
-  proxy.$i18n.locale = locale;
-};
 
 let affichebtn = true;
 const maskBtn = () => {

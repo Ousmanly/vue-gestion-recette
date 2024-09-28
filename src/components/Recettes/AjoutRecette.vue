@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div class="mb-4 d-flex justify-content-end">
-      <button @click="changelocaleuage('en')" class="btn btn-primary me-2">English</button>
-      <button @click="changelocaleuage('fr')" class="btn btn-primary">Français</button>
-    </div>
+   
     <form
       @submit.prevent="handleAddRecipe"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
@@ -71,7 +68,7 @@
 <script setup>
 import { useGestionStore } from "@/stores/gestion";
 import { useRouter } from "vue-router";
-import { ref, getCurrentInstance } from "vue";
+
 const router = useRouter();
 import { onMounted } from "vue";
 const store = useGestionStore();
@@ -106,12 +103,6 @@ const handleAddRecipe = async () => {
       alert("Une erreur inattendue est survenue.");
     }
   }
-};
-const { proxy } = getCurrentInstance();
-
-
-const changelocaleuage = (locale) => {
-  proxy.$i18n.locale = locale;
 };
 
 </script> 

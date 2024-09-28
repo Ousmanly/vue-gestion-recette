@@ -1,9 +1,6 @@
 <template>
   <div class="container mt-5">
-    <div class="mb-4 d-flex justify-content-end">
-      <button @click="changeLanguage('en')" class="btn btn-info me-2">{{ $t('buttons.english') }}</button>
-      <button @click="changeLanguage('fr')" class="btn btn-info">{{ $t('buttons.french') }}</button>
-    </div>
+   
     <form
       @submit.prevent="handleUpdateCategory"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
@@ -35,12 +32,7 @@ import { useRoute, useRouter } from "vue-router";
 import { ref, onMounted } from "vue";
 import { getCurrentInstance } from 'vue';
 
-const { proxy } = getCurrentInstance();
 
-const changeLanguage = (locale) => {
-  proxy.$i18n.locale = locale;
-};
-c
 const store = useGestionStore();
 const router = useRouter();
 const route = useRoute();

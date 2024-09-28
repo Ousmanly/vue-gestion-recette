@@ -35,7 +35,7 @@ const route = useRoute();
                 <RouterLink class="nav-link text-white fw-bold" to="/axios-categories">{{ $t('navbar.axiosRecipes') }}</RouterLink>
               </li>
             </ul>
-           
+            <Lang />
           </div>
         </div>
       </nav>

@@ -1,9 +1,6 @@
 <template>
   <div class="container">
-    <div class="mb-4 d-flex justify-content-end">
-      <button @click="changeLanguage('en')" class="btn btn-info me-2">{{ $t('buttons.english') }}</button>
-      <button @click="changeLanguage('fr')" class="btn btn-info">{{ $t('buttons.french') }}</button>
-    </div>
+   
     <form
       @submit.prevent="addCategory"
       class="formulaire form mb-5 shadow p-3 mb-5 bg-body rounded"
@@ -52,7 +49,7 @@
 <script setup>
 import { useGestionStore } from "@/stores/gestion";
 import { useRouter } from "vue-router";
-import { getCurrentInstance } from 'vue';
+
 // import axios from "axios";
 
 const router = useRouter();
@@ -77,11 +74,7 @@ const addCategory = async () => {
 
   }
 };
-const { proxy } = getCurrentInstance();
 
-const changeLanguage = (locale) => {
-  proxy.$i18n.locale = locale;
-};
 
 </script> 
 
