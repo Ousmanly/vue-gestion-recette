@@ -70,7 +70,7 @@ import { useGestionStore } from "@/stores/gestion";
 import { useRouter } from "vue-router";
 
 const router = useRouter();
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 const store = useGestionStore();
 const title = ref("");
 const ingredients = ref("");
